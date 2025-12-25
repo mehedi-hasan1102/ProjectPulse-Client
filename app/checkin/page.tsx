@@ -2,7 +2,7 @@
 
 export default function CheckInPage() {
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center font-mono">
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center font-sans">
       <div className="grid grid-cols-2 gap-6 w-full max-w-5xl">
         {/* Employee */}
         <div className="bg-white p-6 rounded shadow">

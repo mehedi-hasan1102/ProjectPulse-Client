@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export default function Sidebar() {
   return (
-    <aside className="w-64 bg-blue-600 text-white min-h-screen font-mono">
+    <aside className="w-64 bg-blue-600 text-white min-h-screen font-sans">
       <div className="px-6 py-5 text-xl font-bold">
         ProjectPulse
       </div>

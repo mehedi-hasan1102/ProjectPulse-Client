@@ -1,11 +1,11 @@
 'use client';
 
-import Sidebar from '@/components/Sidebar';
-import Navbar from '@/components/Navbar';
+import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
 
 export default function ProjectDetails() {
   return (
-    <div className="flex font-mono">
+    <div className="flex font-sans">
       <Sidebar />
       <div className="flex-1 bg-gray-100 min-h-screen">
         <Navbar />

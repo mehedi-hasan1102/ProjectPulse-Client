@@ -1,4 +1,3 @@
-// app/auth/login/page.tsx
 'use client';
 
 import { useState } from 'react';
@@ -16,7 +15,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 font-mono">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 font-sans">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <div className="flex flex-col items-center mb-6">
           <div className="text-blue-600 text-3xl font-bold mb-2">❤</div>
@@ -35,7 +34,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -46,20 +45,20 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 transition font-mono"
+            className="w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 transition"
           >
             Log In
           </button>
         </form>
 
         <div className="text-center mt-4">
-          <a href="#" className="text-sm text-blue-600 hover:underline font-mono">
+          <a href="#" className="text-sm text-blue-600 hover:underline">
             Forgot password?
           </a>
         </div>
@@ -67,40 +66,3 @@ export default function LoginPage() {
     </div>
   );
 }
-
-// 'use client';
-
-// export default function LoginPage() {
-//   return (
-//     <div className="min-h-screen flex items-center justify-center bg-gray-100 font-mono">
-//       <div className="bg-white w-full max-w-md rounded-lg shadow p-8">
-//         <h1 className="text-center text-xl font-bold mb-6">
-//           Login to Your Account
-//         </h1>
-
-//         <form className="space-y-4">
-//           <input
-//             type="email"
-//             placeholder="Email"
-//             className="w-full border px-3 py-2 rounded"
-//           />
-//           <input
-//             type="password"
-//             placeholder="Password"
-//             className="w-full border px-3 py-2 rounded"
-//           />
-
-//           <select className="w-full border px-3 py-2 rounded">
-//             <option>Admin</option>
-//             <option>Employee</option>
-//             <option>Client</option>
-//           </select>
-
-//           <button className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-//             Log In
-//           </button>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// }

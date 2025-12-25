@@ -3,10 +3,9 @@
 import Navbar from "@/app/components/Navbar";
 import Sidebar from "@/app/components/Sidebar";
 
-
 export default function AdminDashboard() {
   return (
-    <div className="flex font-mono">
+    <div className="flex font-sans">
       <Sidebar />
 
       <div className="flex-1 bg-gray-100 min-h-screen">

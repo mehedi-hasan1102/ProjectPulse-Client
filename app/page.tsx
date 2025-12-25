@@ -1,4 +1,3 @@
-// app/page.tsx
 'use client';
 
 import { useEffect } from 'react';
@@ -12,7 +11,7 @@ export default function Home() {
   }, [router]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 font-mono">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 font-sans">
       <p className="text-gray-700 text-lg">Redirecting to Login...</p>
     </div>
   );
