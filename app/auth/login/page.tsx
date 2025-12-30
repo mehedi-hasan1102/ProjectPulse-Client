@@ -47,6 +47,7 @@ export default function LoginPage() {
       else if (role === 'client') router.push('/client/dashboard');
       else setError('Invalid user role');
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(err);
       setError(err.response?.data?.message || 'Login failed. Please try again.');
