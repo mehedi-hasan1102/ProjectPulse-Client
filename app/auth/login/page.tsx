@@ -2,16 +2,55 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
+
+// Axios instance
+const api = axios.create({
+  baseURL: 'http://localhost:5000/api', // only /api
+  headers: { 'Content-Type': 'application/json' },
+});
+
+// Save token to localStorage
+const saveToken = (token: string) => {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('token', token);
+  }
+};
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Login:', { email, password });
-    router.push('/admin/dashboard'); // Example role redirect
+    setError('');
+
+    try {
+      // POST to backend
+      const res = await api.post('/auth/login', { email, password });
+
+      const token = res.data.token;
+      const role = res.data.user?.role; // ✅ get role from user object
+
+      if (!token || !role) {
+        setError('Invalid login response from server');
+        return;
+      }
+
+      saveToken(token); // Save JWT
+
+      // Redirect based on role
+      if (role === 'admin') router.push('/admin/dashboard');
+      else if (role === 'employee') router.push('/employee/dashboard');
+      else if (role === 'client') router.push('/client/dashboard');
+      else setError('Invalid user role');
+
+    } catch (err: any) {
+      console.error(err);
+      setError(err.response?.data?.message || 'Login failed. Please try again.');
+    }
   };
 
   return (
@@ -27,27 +66,25 @@ export default function LoginPage() {
         </h2>
 
         <form className="space-y-4" onSubmit={handleSubmit}>
-          <div>
-            <input
-              type="email"
-              placeholder="user@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+          <input
+            type="email"
+            placeholder="user@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
 
-          <div>
-            <input
-              type="password"
-              placeholder="********"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+          <input
+            type="password"
+            placeholder="********"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          {error && <p className="text-red-500 text-sm">{error}</p>}
 
           <button
             type="submit"
@@ -56,12 +93,6 @@ export default function LoginPage() {
             Log In
           </button>
         </form>
-
-        <div className="text-center mt-4">
-          <a href="#" className="text-sm text-blue-600 hover:underline">
-            Forgot password?
-          </a>
-        </div>
       </div>
     </div>
   );
