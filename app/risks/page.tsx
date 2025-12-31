@@ -1,18 +1,50 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 
-
+interface Risk {
+  _id: string;
+  project: string;
+  status: 'Critical' | 'At Risk' | 'On Track' | 'Resolved';
+  title: string;
+}
 
 export default function RisksPage() {
-  const risks = [
-    { project: 'Security Audit', status: 'Critical' },
-    { project: 'Payment System', status: 'At Risk' },
-    { project: 'Website Redesign', status: 'On Track' },
-    { project: 'Mobile App', status: 'At Risk' },
-  ];
+  const [risks, setRisks] = useState<Risk[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
+  useEffect(() => {
+    const fetchRisks = async () => {
+      try {
+        const res = await fetch(
+          'http://localhost:5000/api/risks',
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          }
+        );
+
+        if (!res.ok) {
+          throw new Error('Failed to fetch risks');
+        }
+
+        const {data} = await res.json();
+        setRisks(data);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRisks();
+
+  }, []);
+console.log(risks);
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'Critical':
@@ -21,6 +53,8 @@ export default function RisksPage() {
         return 'text-orange-600';
       case 'On Track':
         return 'text-green-600';
+      case 'Resolved':
+        return 'text-gray-500';
       default:
         return 'text-gray-600';
     }
@@ -36,24 +70,41 @@ export default function RisksPage() {
           <h1 className="text-2xl font-bold mb-4">Project Risks</h1>
 
           <div className="bg-white p-6 rounded shadow">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b">
-                  <th className="py-2 px-4">Project</th>
-                  <th className="py-2 px-4">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {risks.map((risk, index) => (
-                  <tr key={index} className="border-b last:border-b-0">
-                    <td className="py-2 px-4">{risk.project}</td>
-                    <td className={`py-2 px-4 font-semibold ${getStatusColor(risk.status)}`}>
-                      {risk.status}
-                    </td>
+            {loading && <p>Loading risks...</p>}
+            {error && <p className="text-red-500">{error}</p>}
+
+            {!loading && !error && (
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b">
+                    <th className="py-2 px-4">Project</th>
+                    <th className="py-2 px-4">Status</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {risks.length === 0 ? (
+                    <tr>
+                      <td colSpan={2} className="py-4 text-center text-gray-500">
+                        No risks found
+                      </td>
+                    </tr>
+                  ) : (
+                    risks.map((risk) => (
+                      <tr key={risk._id} className="border-b last:border-b-0">
+                        <td className="py-2 px-4">{risk.title}</td>
+                        <td
+                          className={`py-2 px-4 font-semibold ${getStatusColor(
+                            risk.status
+                          )}`}
+                        >
+                          {risk.status}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            )}
           </div>
         </main>
       </div>
