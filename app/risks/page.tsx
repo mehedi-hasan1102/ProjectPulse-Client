@@ -20,7 +20,7 @@ export default function RisksPage() {
     const fetchRisks = async () => {
       try {
         const res = await fetch(
-          'http://localhost:5000/api/risks',
+          'https://project-pulse-server-five.vercel.app/api/risks',
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('token')}`,

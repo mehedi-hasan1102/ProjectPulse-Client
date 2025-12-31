@@ -30,7 +30,7 @@ export default function AdminDashboard() {
           return;
         }
 
-        const res = await axios.get("http://localhost:5000/api/dashboard/", {
+        const res = await axios.get("https://project-pulse-server-five.vercel.app/api/dashboard/", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

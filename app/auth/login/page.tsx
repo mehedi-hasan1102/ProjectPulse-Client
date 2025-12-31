@@ -6,7 +6,7 @@ import axios from 'axios';
 
 // Axios instance
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api', // only /api
+  baseURL: 'https://project-pulse-server-five.vercel.app/api', // only /api
   headers: { 'Content-Type': 'application/json' },
 });
 

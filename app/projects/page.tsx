@@ -20,7 +20,7 @@ export default function ProjectDetails() {
         const token = localStorage.getItem('token');
 
         const res = await axios.get(
-          `http://localhost:5000/api/projects`,
+          `https://project-pulse-server-five.vercel.app/api/projects`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
