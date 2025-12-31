@@ -5,16 +5,23 @@ import axios from "axios";
 import Navbar from "@/app/components/Navbar";
 import Sidebar from "@/app/components/Sidebar";
 
-interface Project {
-  _id: string;
-  name: string;
-  status: string;
+interface DashboardItem {
+  project: {
+    _id: string;
+    name: string;
+    status: "On Track" | "At Risk" | "Critical";
+    healthScore: number;
+  };
   healthScore: number;
+  lastFeedback?: {
+    satisfaction: number;
+    flagged: boolean;
+  };
 }
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({ onTrack: 0, atRisk: 0, critical: 0 });
-  const [highRiskProjects, setHighRiskProjects] = useState<Project[]>([]);
+  const [dashboard, setDashboard] = useState<DashboardItem[]>([]);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -32,17 +39,16 @@ export default function AdminDashboard() {
           },
         });
 
-        const grouped = res.data.grouped;
-        const highRisk = res.data.highRiskProjects;
+        const dashboardData: DashboardItem[] = res.data.dashboard || [];
+        setDashboard(dashboardData);
 
+        // 📊 Stats calculate
         setStats({
-          onTrack: grouped["On Track"]?.length || 0,
-          atRisk: grouped["At Risk"]?.length || 0,
-          critical: grouped["Critical"]?.length || 0,
+          onTrack: dashboardData.filter(d => d.project.status === "On Track").length,
+          atRisk: dashboardData.filter(d => d.project.status === "At Risk").length,
+          critical: dashboardData.filter(d => d.project.status === "Critical").length,
         });
 
-        setHighRiskProjects(highRisk || []);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         console.error(err);
         setError(err.response?.data?.message || "Failed to fetch dashboard data.");
@@ -51,6 +57,11 @@ export default function AdminDashboard() {
 
     fetchDashboard();
   }, []);
+
+  // 🚨 High risk projects (Critical + At Risk)
+  const highRiskProjects = dashboard.filter(
+    d => d.project.status === "Critical" || d.project.status === "At Risk"
+  );
 
   return (
     <div className="flex font-sans">
@@ -78,21 +89,26 @@ export default function AdminDashboard() {
           {/* High Risk Projects */}
           <div className="bg-white p-4 rounded shadow">
             <h2 className="font-bold mb-3">High Risk Projects</h2>
+
             <ul className="space-y-2 text-sm">
-              {highRiskProjects.length === 0 && <li>No high risk projects</li>}
-              {highRiskProjects.map((proj) => (
-                <li key={proj._id} className="flex justify-between">
-                  <span>{proj.name}</span>
+              {highRiskProjects.length === 0 && (
+                <li>No high risk projects</li>
+              )}
+
+              {highRiskProjects.map((item) => (
+                <li
+                  key={item.project._id}
+                  className="flex justify-between"
+                >
+                  <span>{item.project.name}</span>
                   <span
                     className={
-                      proj.status === "Critical"
+                      item.project.status === "Critical"
                         ? "text-red-600"
-                        : proj.status === "At Risk"
-                        ? "text-orange-600"
-                        : "text-green-600"
+                        : "text-orange-600"
                     }
                   >
-                    {proj.status}
+                    {item.project.status}
                   </span>
                 </li>
               ))}
